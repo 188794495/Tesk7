@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <context:annotation-config/>
+    <!-- 扫描web相关的bean -->
+    <context:component-scan base-package="com.controller"/>
+
+    <!-- 开启SpringMVC注解模式 -->
+    <mvc:annotation-driven/>
+
+    <!-- 静态资源默认servlet配置 -->
+    <mvc:default-servlet-handler/>
+
+
+    <!-- tiles视图解释类 -->
+    <bean id="tilesViewResolver" class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView" />
+    </bean>
+
+    <!-- tiles配置路径 -->
+    <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+        <property name="definitions">
+            <list>
+                <value>/WEB-INF/tiles/titles.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <mvc:interceptors>
+        <!-- 配置登陆拦截器 -->
+        <mvc:interceptor>
+            <!--拦截后台页面的请求-->
+            <mvc:mapping path="/u/**"/>
+            <bean class="com.utils.LoginInterceptor"></bean>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+    <!-- 定义文件上传解析器 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设定默认编码 -->
+        <property name="defaultEncoding" value="UTF-8"></property>
+        <!-- 设定文件上传的最大值5MB，5*1024*1024 -->
+        <property name="maxUploadSize" value="5242880"></property>
+    </bean>
+
+</beans>
+    <!--<bean id="propertyConfigurer"-->
+          <!--class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">-->
+        <!--&lt;!&ndash; 也可以将jdbc写成properties文件在此导入 &ndash;&gt;-->
+        <!--<property name="locations">-->
+            <!--<list>-->
+                <!--<value>classpath:memcached.properties</value>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+    <!-- 配置一个视图解析器（配置jsp 显示ViewResolver） -->
+    <!--<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+        <!--<property name="prefix" value="/WEB-INF/jsp/"/>-->
+        <!--<property name="suffix" value=".jsp"/>-->
+    <!--</bean>-->
+    <!--<bean-->
+            <!--class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+        <!--<property name="viewClass"-->
+                  <!--value="org.springframework.web.servlet.view.JstlView"/>-->
+        <!--<property name="prefix" value="/WEB-INF/jsp/"/>-->
+        <!--<property name="suffix" value=".jsp"/>-->
+    <!--</bean>-->
+
+    <!--<mvc:annotation-driven />-->
+    <!--<mvc:resources mapping="/css/**" location="/statics/css/**" />-->
+    <!--<mvc:resources mapping="/img/**" location="/statics/images/**" />-->
+    <!--<mvc:resources mapping="/js/**" location="/statics/js/**" />-->
+
+

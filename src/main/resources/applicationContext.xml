@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+    <!-- 激活组件扫描功能,在包cn.ysh.studio.spring.aop及其子包下面自动扫描通过注解配置的组件 -->
+
+
+
+
+    <bean id="CookieLocaleResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+        <!--<property name="cookieMaxAge" value="604800"></property>-->
+        <property name="defaultLocale" value="zh_CN"></property>
+        <property name="cookieName" value="language"></property>
+    </bean>
+
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="initialPoolSize" value="${jdbc.initialPoolSize}"></property>
+        <property name="acquireIncrement" value="${jdbc.acquireIncrement}"></property>
+        <property name="minPoolSize" value="${jdbc.minPoolSize}"></property>
+        <property name="maxPoolSize" value="${jdbc.maxPoolSize}"></property>
+        <property name="driverClass" value="${jdbc.driverClass}"></property>
+        <property name="jdbcUrl" value="${jdbc.jdbcUrl}"></property>
+        <property name="user" value="${jdbc.user}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+
+    </bean>
+    <!-- spring+mybatis完美结合 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 注入dataSource -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- mybatis批量别名配置 -->
+        <property name="typeAliasesPackage" value="com.pojo"/>
+        <!--&lt;!&ndash;日志配置 &ndash;&gt;-->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <!--使用下面的方式配置参数，一行配置一个 -->
+                        <value>
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+
+    <!--扫描redis配置文件-->
+    <context:property-placeholder ignore-unresolvable="true" location="classpath:redis.properties"/>
+    <!--Spring整合Redis-->
+    <!--设置连接池-->
+    <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <!-- 最大空闲连接数 -->
+        <property name="maxIdle" value="${redis.maxIdle}"/>
+        <!-- 最大连接数 -->
+        <property name="maxTotal" value="${redis.maxTotal}" />
+        <!-- 每次释放连接的最大数目 -->
+        <property name="numTestsPerEvictionRun" value="${redis.numTestsPerEvictionRun}" />
+        <!-- 释放连接的扫描间隔（毫秒） -->
+        <property name="timeBetweenEvictionRunsMillis" value="${redis.timeBetweenEvictionRunsMillis}" />
+        <!-- 连接最小空闲时间 -->
+        <property name="minEvictableIdleTimeMillis" value="${redis.minEvictableIdleTimeMillis}" />
+        <!-- 获取连接时的最大等待毫秒数,小于零:阻塞不确定的时间,默认-1 -->
+        <property name="maxWaitMillis" value="${redis.maxWaitMillis}" />
+        <!-- 在获取连接的时候检查有效性, 默认false -->
+        <property name="testOnBorrow" value="${redis.testOnBorrow}" />
+        <property name="testOnReturn" value="${redis.testOnReturn}" />
+        <!-- 在空闲时检查有效性, 默认false -->
+        <property name="testWhileIdle" value="${redis.testWhileIdle}" />
+        <!-- 连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true -->
+        <property name="blockWhenExhausted" value="${redis.blockWhenExhausted}" />
+    </bean>
+    <bean id="JedisClient" class="com.redis.JedisClientSingle"/>
+
+    <!-- jedis客户端单机版 -->
+    <bean id="redisClient" class="redis.clients.jedis.JedisPool">
+        <constructor-arg name="host" value="${redis.host}"></constructor-arg>
+        <constructor-arg name="port" value="${redis.port}"></constructor-arg>
+        <!--<constructor-arg name="password" value="${redis.password}"></constructor-arg>-->
+        <constructor-arg name="poolConfig" ref="poolConfig"></constructor-arg>
+        <constructor-arg name="timeout" value="100000"></constructor-arg>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 指定需要生成代理的接口所在的包名 -->
+        <property name="basePackage" value="com.mapper"/>
+        <!-- 注意事项：千万不要配置SqlSessionFactory，要配置sqlSessionFactoryBeanName -->
+        <!-- <property name="sqlSessionFactory" ref="sqlSessionFactory"></property> -->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+
+    <!-- 加载配置文件 -->
+    <context:property-placeholder location="classpath*:db.properties"/>
+
+    <context:component-scan base-package="com.aspect"/>
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <!-- 扫描业务bean -->
+    <context:component-scan base-package="com.service"></context:component-scan>
+
+    <context:component-scan base-package="com.controller"></context:component-scan>
+
+
+
+</beans>

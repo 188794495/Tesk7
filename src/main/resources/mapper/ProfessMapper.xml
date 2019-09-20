@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.ProfessMapper">
+    <resultMap id="BaseResultMap" type="com.pojo.Profess">
+        <id column="ID" jdbcType="BIGINT" property="id"/>
+        <result column="img" jdbcType="VARCHAR" property="img"/>
+        <result column="direction" jdbcType="VARCHAR" property="direction"/>
+        <result column="profession" jdbcType="VARCHAR" property="profession"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="threshold" jdbcType="INTEGER" property="threshold"/>
+        <result column="difficulty" jdbcType="INTEGER" property="difficulty"/>
+        <result column="period" jdbcType="VARCHAR" property="period"/>
+        <result column="company" jdbcType="INTEGER" property="company"/>
+        <result column="salary_one" jdbcType="INTEGER" property="salaryOne"/>
+        <result column="salary_two" jdbcType="INTEGER" property="salaryTwo"/>
+        <result column="salary_three" jdbcType="INTEGER" property="salaryThree"/>
+        <result column="create_at" jdbcType="BIGINT" property="createAt"/>
+        <result column="update_at" jdbcType="BIGINT" property="updateAt"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    ID, img, direction, profession, description, threshold, difficulty, period, company,
+    salary_one, salary_two, salary_three, create_at, update_at
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from profess
+        where ID = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from profess
+    where ID = #{id,jdbcType=BIGINT}
+  </delete>
+
+    <select id="list" resultMap="BaseResultMap" parameterType="com.pojo.Profess">
+    select * from profess
+  </select>
+
+
+    <insert id="insert" parameterType="com.pojo.Profess">
+    insert into profess (ID, img, direction,
+      profession, description, threshold,
+      difficulty, period, company,
+      salary_one, salary_two, salary_three,
+      create_at, update_at)
+    values (#{id,jdbcType=BIGINT}, #{img,jdbcType=VARCHAR}, #{direction,jdbcType=VARCHAR},
+      #{profession,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{threshold,jdbcType=INTEGER},
+      #{difficulty,jdbcType=INTEGER}, #{period,jdbcType=VARCHAR}, #{company,jdbcType=INTEGER},
+      #{salaryOne,jdbcType=INTEGER}, #{salaryTwo,jdbcType=INTEGER}, #{salaryThree,jdbcType=INTEGER},
+      #{createAt,jdbcType=BIGINT}, #{updateAt,jdbcType=BIGINT})
+  </insert>
+    <insert id="insertSelective" parameterType="com.pojo.Profess">
+        insert into profess
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                ID,
+            </if>
+            <if test="img != null">
+                img,
+            </if>
+            <if test="direction != null">
+                direction,
+            </if>
+            <if test="profession != null">
+                profession,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="threshold != null">
+                threshold,
+            </if>
+            <if test="difficulty != null">
+                difficulty,
+            </if>
+            <if test="period != null">
+                period,
+            </if>
+            <if test="company != null">
+                company,
+            </if>
+            <if test="salaryOne != null">
+                salary_one,
+            </if>
+            <if test="salaryTwo != null">
+                salary_two,
+            </if>
+            <if test="salaryThree != null">
+                salary_three,
+            </if>
+            <if test="createAt != null">
+                create_at,
+            </if>
+            <if test="updateAt != null">
+                update_at,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="img != null">
+                #{img,jdbcType=VARCHAR},
+            </if>
+            <if test="direction != null">
+                #{direction,jdbcType=VARCHAR},
+            </if>
+            <if test="profession != null">
+                #{profession,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="threshold != null">
+                #{threshold,jdbcType=INTEGER},
+            </if>
+            <if test="difficulty != null">
+                #{difficulty,jdbcType=INTEGER},
+            </if>
+            <if test="period != null">
+                #{period,jdbcType=VARCHAR},
+            </if>
+            <if test="company != null">
+                #{company,jdbcType=INTEGER},
+            </if>
+            <if test="salaryOne != null">
+                #{salaryOne,jdbcType=INTEGER},
+            </if>
+            <if test="salaryTwo != null">
+                #{salaryTwo,jdbcType=INTEGER},
+            </if>
+            <if test="salaryThree != null">
+                #{salaryThree,jdbcType=INTEGER},
+            </if>
+            <if test="createAt != null">
+                #{createAt,jdbcType=BIGINT},
+            </if>
+            <if test="updateAt != null">
+                #{updateAt,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.pojo.Profess">
+        update profess
+        <set>
+            <if test="img != null">
+                img = #{img,jdbcType=VARCHAR},
+            </if>
+            <if test="direction != null">
+                direction = #{direction,jdbcType=VARCHAR},
+            </if>
+            <if test="profession != null">
+                profession = #{profession,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="threshold != null">
+                threshold = #{threshold,jdbcType=INTEGER},
+            </if>
+            <if test="difficulty != null">
+                difficulty = #{difficulty,jdbcType=INTEGER},
+            </if>
+            <if test="period != null">
+                period = #{period,jdbcType=VARCHAR},
+            </if>
+            <if test="company != null">
+                company = #{company,jdbcType=INTEGER},
+            </if>
+            <if test="salaryOne != null">
+                salary_one = #{salaryOne,jdbcType=INTEGER},
+            </if>
+            <if test="salaryTwo != null">
+                salary_two = #{salaryTwo,jdbcType=INTEGER},
+            </if>
+            <if test="salaryThree != null">
+                salary_three = #{salaryThree,jdbcType=INTEGER},
+            </if>
+            <if test="createAt != null">
+                create_at = #{createAt,jdbcType=BIGINT},
+            </if>
+            <if test="updateAt != null">
+                update_at = #{updateAt,jdbcType=BIGINT},
+            </if>
+        </set>
+        where ID = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.pojo.Profess">
+    update profess
+    set img = #{img,jdbcType=VARCHAR},
+      direction = #{direction,jdbcType=VARCHAR},
+      profession = #{profession,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      threshold = #{threshold,jdbcType=INTEGER},
+      difficulty = #{difficulty,jdbcType=INTEGER},
+      period = #{period,jdbcType=VARCHAR},
+      company = #{company,jdbcType=INTEGER},
+      salary_one = #{salaryOne,jdbcType=INTEGER},
+      salary_two = #{salaryTwo,jdbcType=INTEGER},
+      salary_three = #{salaryThree,jdbcType=INTEGER},
+      create_at = #{createAt,jdbcType=BIGINT},
+      update_at = #{updateAt,jdbcType=BIGINT}
+    where ID = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
